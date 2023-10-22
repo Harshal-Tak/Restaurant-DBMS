@@ -1,6 +1,6 @@
 import tkinter as tk
-from tkinter import TOP, GROOVE, BOTTOM, RAISED, LEFT, Y, X, messagebox
-
+from tkinter import TOP, GROOVE, BOTTOM, RAISED, LEFT, Y, X, messagebox, RIGHT
+from datetime import datetime
 import mysql.connector
 
 
@@ -15,7 +15,7 @@ class TkinterApp(tk.Tk):
 
         self.frames = {}
 
-        for F in (StartPage, Customer, Payment, ViewCustomers):
+        for F in (StartPage, Customer, Payment, ViewCustomers,Orders):
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -40,6 +40,7 @@ class StartPage(tk.Frame):
         f1 = tk.Frame(self, bg="grey", relief=GROOVE, borderwidth=10)
         f1.pack(side=TOP, fill=X)
 
+
         # Items
         center_frame = tk.Frame(self, bg='white', relief=GROOVE, borderwidth=5, width=1000, height=1000)
         center_frame.pack(padx=30, pady=30)
@@ -62,7 +63,7 @@ class StartPage(tk.Frame):
                        relief=GROOVE, borderwidth=5)
         b2.pack(side=BOTTOM, padx=15, pady=20)
         b3 = tk.Button(button_frame, text="Orders", font=('FixedSys', 10, 'bold'),
-                       command=lambda: controller.show_frame(StartPage), width=10, height=2,
+                       command=lambda: controller.show_frame(Orders), width=10, height=2,
                        relief=GROOVE, borderwidth=5)
         b3.pack(side=BOTTOM, padx=15, pady=20)
         b4 = tk.Button(button_frame, text="Payment", font=('FixedSys', 10, 'bold'),
@@ -122,7 +123,7 @@ class Customer(tk.Frame):
         b2.pack(side=tk.BOTTOM, padx=15, pady=20)
 
         b3 = tk.Button(button_frame, text="Orders", font=('FixedSys', 10, 'bold'),
-                       command=lambda: controller.show_frame(StartPage), width=10, height=2,
+                       command=lambda: controller.show_frame(Orders), width=10, height=2,
                        relief=tk.GROOVE, borderwidth=5)
         b3.pack(side=tk.BOTTOM, padx=15, pady=20)
 
@@ -235,7 +236,7 @@ class Payment(tk.Frame):
         b2.pack(side=tk.BOTTOM, padx=15, pady=20)
 
         b3 = tk.Button(button_frame, text="Orders", font=('FixedSys', 10, 'bold'),
-                       command=lambda: controller.show_frame(StartPage), width=10, height=2,
+                       command=lambda: controller.show_frame(Orders), width=10, height=2,
                        relief=tk.GROOVE, borderwidth=5)
         b3.pack(side=tk.BOTTOM, padx=15, pady=20)
 
@@ -365,7 +366,7 @@ class ViewCustomers(tk.Frame):
         b2.pack(side=tk.BOTTOM, padx=15, pady=20)
 
         b3 = tk.Button(button_frame, text="Orders", font=('FixedSys', 10, 'bold'),
-                       command=lambda: controller.show_frame(StartPage), width=10, height=2,
+                       command=lambda: controller.show_frame(Orders), width=10, height=2,
                        relief=tk.GROOVE, borderwidth=5)
         b3.pack(side=tk.BOTTOM, padx=15, pady=20)
 
@@ -416,6 +417,132 @@ class ViewCustomers(tk.Frame):
         fetch_button = tk.Button(down_nav_frame, text="Fetch", relief=tk.GROOVE, font=('FixedSys', 10, 'bold'),
                                  width=20, height=2, borderwidth=2, command=update_listbox)
         fetch_button.pack(side=tk.BOTTOM, padx=15, pady=10)
+
+
+class Orders(tk.Frame):
+    def __init__(self,parent,controller):
+        tk.Frame.__init__(self, parent)
+
+        button_frame = tk.Frame(self, bg='grey', relief=tk.GROOVE, borderwidth=10)
+        button_frame.pack(side=tk.LEFT, fill=tk.Y)
+
+        f1 = tk.Frame(self, bg="grey", relief=tk.GROOVE, borderwidth=10)
+        f1.pack(side=tk.TOP, fill=tk.X)
+
+        center_frame = tk.Frame(self, bg='white', relief=tk.GROOVE, borderwidth=5, width=1000, height=1000)
+        center_frame.pack(padx=30, pady=30)
+
+        lbl1 = tk.Label(f1, text="AI RESTAURANT", bg='grey', fg='white', font=('FixedSys', 20, 'bold'), pady=10)
+        lbl1.pack(side=tk.TOP, anchor="n", fill=tk.X)
+
+        lbl2 = tk.Label(button_frame, text="🔎Menu", bg='grey', fg='white', font=('FixedSys', 20, 'bold'), padx=10)
+        lbl2.pack(side=tk.TOP, fill=tk.X)
+
+        setting = tk.Label(button_frame, text="⚙️Settings", font=('FixedSys', 10, 'bold'), width=10, height=2,
+                           relief=tk.GROOVE, borderwidth=5)
+        setting.pack(side=tk.BOTTOM, padx=15, pady=80)
+
+        b1 = tk.Button(button_frame, text="Items", font=('FixedSys', 10, 'bold'),
+                       command=lambda: controller.show_frame(StartPage), width=10, height=2,
+                       relief=tk.GROOVE, borderwidth=5)
+        b1.pack(side=tk.BOTTOM, padx=15, pady=20)
+
+        b2 = tk.Button(button_frame, text="Customer", font=('FixedSys', 10, 'bold'),
+                       command=lambda: controller.show_frame(Customer), width=10, height=2,
+                       relief=tk.GROOVE, borderwidth=5)
+        b2.pack(side=tk.BOTTOM, padx=15, pady=20)
+
+        b3 = tk.Button(button_frame, text="Orders", font=('FixedSys', 10, 'bold'),
+                       command=lambda: controller.show_frame(Orders), width=10, height=2,
+                       relief=tk.GROOVE, borderwidth=5)
+        b3.pack(side=tk.BOTTOM, padx=15, pady=20)
+
+        b4 = tk.Button(button_frame, text="Payment", font=('FixedSys', 10, 'bold'),
+                       command=lambda: controller.show_frame(Payment), width=10, height=2,
+                       relief=tk.GROOVE, borderwidth=5)
+        b4.pack(side=tk.BOTTOM, padx=15, pady=20)
+
+        item_labels = ['1','2','3','4','5','6','7','8','9']
+        price = [10,10,10,10,10,10,10,10,10]
+        quantity_entries = []  # List to store entry fields for quantities
+        for i in range(9):
+            item_label = tk.Label(center_frame, text=f"Item {i + 1}", font=('FixedSys', 12))
+            item_label.grid(row=i, column=0, padx=10, pady=5, sticky='w')
+            item_labels.append(item_label)
+
+            quantity_entry = tk.Entry(center_frame, font=('FixedSys', 12), width=5)
+            quantity_entry.grid(row=i, column=1, padx=10, pady=5)
+            quantity_entries.append(quantity_entry)
+
+        self.order_id_label = tk.Label(center_frame, text="Order ID:", font=('FixedSys', 12))
+        self.order_id_label.grid(row=10, column=0, padx=10, pady=5, sticky='w')
+        self.order_id_entry = tk.Entry(center_frame, font=('FixedSys', 12), width=10)
+        self.order_id_entry.grid(row=10, column=1, padx=10, pady=5)
+
+        self.customer_id_label = tk.Label(center_frame, text="Customer ID:", font=('FixedSys', 12))
+        self.customer_id_label.grid(row=11, column=0, padx=10, pady=5, sticky='w')
+        self.customer_id_entry = tk.Entry(center_frame, font=('FixedSys', 12), width=10)
+        self.customer_id_entry.grid(row=11, column=1, padx=10, pady=5)
+
+        self.order_date_label = tk.Label(center_frame, text="Order Date:", font=('FixedSys', 12))
+        self.order_date_label.grid(row=12, column=0, padx=10, pady=5, sticky='w')
+
+        order_date_value = tk.Label(center_frame, text="", font=('FixedSys', 12))
+        order_date_value.grid(row=12, column=1, padx=10, pady=5)
+
+        self.total_price_label = tk.Label(center_frame, text="Total Price:", font=('FixedSys', 12))
+        self.total_price_label.grid(row=13, column=0, padx=10, pady=5, sticky='w')
+
+        total_price_value = tk.Label(center_frame, text="", font=('FixedSys', 12))
+        total_price_value.grid(row=13, column=1, padx=10, pady=5)
+
+        # Step 6: Calculate Total Price
+        def calculate_total_price():
+            total_price = 0
+            for i in range(9):
+                quantity_str = quantity_entries[i].get()
+                if quantity_str and quantity_str.isdigit():
+                    quantity = int(quantity_str)
+                    total_price += quantity * price[i]
+
+            total_price_value.config(text=f"Total Price: ${total_price}")
+            order_date_value.config(text=f"Today: {datetime.now()}")
+
+        # Step 7: Save Order to Database
+        def save_order_to_database():
+            order_id = int(self.order_id_entry.get())
+            customer_id = int(self.customer_id_entry.get())
+            order_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            total_price_str = total_price_value.cget("text")[13:]
+            total_price = float(total_price_str.replace('$', ''))
+
+            try:
+                conn = mysql.connector.connect(
+                    user='root',
+                    password='1234',
+                    host='localhost',
+                    database='ai_restaurant',
+                    auth_plugin='mysql_native_password'
+                )
+                cursor = conn.cursor()
+
+                insert_query = "INSERT INTO Orders(order_id,customer_id,order_date,total_price) VALUES (%s, %s, %s, %s)"
+                data = (order_id, customer_id, order_date, total_price)
+
+                cursor.execute(insert_query, data)
+                conn.commit()
+
+            except Exception as e:
+                print("Error occurred! ", e)
+
+        def submit_order():
+            calculate_total_price()
+            save_order_to_database()
+
+        submit_button = tk.Button(center_frame, text="Submit Order", font=('FixedSys', 12),
+                                  command=submit_order)
+        submit_button.grid(row=14, column=0, columnspan=2, pady=10)
+
 
 
 # Create an instance of TkinterApp and run the application
